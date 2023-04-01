@@ -22,7 +22,8 @@ class StudentFaculty extends Contract {
             name: name,
             department: department,
             age: age,
-            type: 'student'
+            type: 'student',
+            courses: []
         };
         await ctx.stub.putState(studentId, Buffer.from(JSON.stringify(student)));
         return JSON.stringify(student);
@@ -63,7 +64,10 @@ class StudentFaculty extends Contract {
     }
 
     // generate function to enroll faculty
-    async enrollFaculty(ctx, facultyId, name, department, age) {
+    async enrollFaculty(ctx, name, department, age) {
+        let commonName = ctx.clientIdentity.getAttributeValue('hf.EnrollmentID');
+        let facultyId = commonName;
+
         // get the client msp id
         let mspId = ctx.clientIdentity.getMSPID();
         // check if the client msp id is not equal to the org2 msp id
@@ -180,10 +184,14 @@ async enrollCourse(ctx, courseName) {
     if (student.type !== 'student') {
         throw new Error(`${studentId} is not a student`);
     }
-    if (!student.courses) {
-        student.courses = [];
+    // check if the student is already enrolled to the course
+    if (student.courses.includes(courseName)) {
+        throw new Error(`${studentId} is already enrolled to ${courseName}`);
     }
+    // push the course name to the student courses array
     student.courses.push(courseName);
+    await ctx.stub.putState(studentId, Buffer.from(JSON.stringify(student)));
+    return JSON.stringify(student);
 }
 }
 module.exports = StudentFaculty;
