@@ -1,0 +1,5 @@
+crypto-config/*
+artifacts/*
+artifacts/genesis.block
+**node_modules
+**package-lock.json
