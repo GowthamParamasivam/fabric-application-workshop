@@ -6,3 +6,9 @@ artifacts/genesis.block
 wallet/walletOrg1/*
 wallet/walletOrg2/*
 **.id
+/connection-profile/*
+
+connection-profiles/connection-org1.json
+connection-profiles/connection-org2.json
+coneection-profiles/connection-org1.yaml
+coneection-profiles/connection-org2.yaml
