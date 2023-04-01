@@ -3,4 +3,6 @@ artifacts/*
 artifacts/genesis.block
 **node_modules
 **package-lock.json
-wallet/*
+wallet/walletOrg1/*
+wallet/walletOrg2/*
+**.id
