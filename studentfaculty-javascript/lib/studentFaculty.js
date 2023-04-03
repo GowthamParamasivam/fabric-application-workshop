@@ -29,7 +29,6 @@ class StudentFaculty extends Contract {
         return JSON.stringify(student);
     }
 
-
     async getStudent(ctx) {
         let commonName = ctx.clientIdentity.getAttributeValue('hf.EnrollmentID');
         let studentId = commonName;
@@ -63,7 +62,7 @@ class StudentFaculty extends Contract {
         return studentAsBytes.toString();
     }
 
-    // generate function to enroll faculty
+    // function to enroll faculty
     async enrollFaculty(ctx, name, department, age) {
         let commonName = ctx.clientIdentity.getAttributeValue('hf.EnrollmentID');
         let facultyId = commonName;
@@ -85,7 +84,7 @@ class StudentFaculty extends Contract {
         return JSON.stringify(faculty);
     }
 
-    // generate function to get faculty
+    // function to get faculty
     async getFacultyById(ctx, facultyId) {
         // get the client msp id
         let mspId = ctx.clientIdentity.getMSPID();
@@ -172,26 +171,27 @@ class StudentFaculty extends Contract {
     }
 
 //  function to enroll course to the students
-async enrollCourse(ctx, courseName) {
-    // get common name from the x509 certificate
-    let commonName = ctx.clientIdentity.getAttributeValue('hf.EnrollmentID');
-    let studentId = commonName;
-    let studentAsBytes = await ctx.stub.getState(studentId);
-    if (!studentAsBytes || studentAsBytes.length === 0) {
-        throw new Error(`${studentId} does not exist`);
+    async enrollCourse(ctx, courseName) {
+        // get common name from the x509 certificate
+        let commonName = ctx.clientIdentity.getAttributeValue('hf.EnrollmentID');
+        let studentId = commonName;
+        let studentAsBytes = await ctx.stub.getState(studentId);
+        if (!studentAsBytes || studentAsBytes.length === 0) {
+            throw new Error(`${studentId} does not exist`);
+        }
+        let student = JSON.parse(studentAsBytes.toString());
+        if (student.type !== 'student') {
+            throw new Error(`${studentId} is not a student`);
+        }
+        // check if the student is already enrolled to the course
+        if (student.courses.includes(courseName)) {
+            throw new Error(`${studentId} is already enrolled to ${courseName}`);
+        }
+        // push the course name to the student courses array
+        student.courses.push(courseName);
+        await ctx.stub.putState(studentId, Buffer.from(JSON.stringify(student)));
+        return JSON.stringify(student);
     }
-    let student = JSON.parse(studentAsBytes.toString());
-    if (student.type !== 'student') {
-        throw new Error(`${studentId} is not a student`);
     }
-    // check if the student is already enrolled to the course
-    if (student.courses.includes(courseName)) {
-        throw new Error(`${studentId} is already enrolled to ${courseName}`);
-    }
-    // push the course name to the student courses array
-    student.courses.push(courseName);
-    await ctx.stub.putState(studentId, Buffer.from(JSON.stringify(student)));
-    return JSON.stringify(student);
-}
-}
+    
 module.exports = StudentFaculty;
