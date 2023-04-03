@@ -12,4 +12,4 @@ sudo cp -rf /root/fabric-samples/fabric-samples/test-network/organizations/peerO
 sudo cp -rf /root/fabric-samples/fabric-samples/test-network/organizations/peerOrganizations/org1.example.com/connection-org1.json /root/kpr-workshop/fabric-application/connection-profiles/connection-org1.json 
 #copy for Org2
 sudo cp -rf /root/fabric-samples/fabric-samples/test-network/organizations/peerOrganizations/org2.example.com/connection-org2.json /root/kpr-workshop/fabric-application/connection-profiles/connection-org2.json 
-echo "===== Copied successfully ======"
+echo "===== Connection Profiles Copied successfully ======"
